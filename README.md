@@ -1,5 +1,10 @@
 # Rwanda Entrepreneurship Journey Simulator - DQN vs REINFORCE vs A2C vs PPO (TorchRL)
 
+> **Platform note:** this project needs **Apple Silicon (M1/M2/M3/M4) Macs, Windows 64-bit, or Linux**.
+> It will not install on Intel Macs, because PyTorch 2.3 and later (required by TorchRL 0.15) no longer
+> ships Intel-Mac builds. On an Intel Mac, `uv sync` fails with a "doesn't have a wheel for the current
+> platform" error. This is a PyTorch limitation, not a bug in the project.
+
 An agent guides a young Rwandan from "little skill, little cash" to a **sustainable micro-business with at least two
 employees**. One step = one month. The agent chooses from 11 actions (train, mentor, loan, plan, launch retail /
 digital / education, hire, invest, repay, wait) in a stochastic economy (random demand shocks, random loan approval,
