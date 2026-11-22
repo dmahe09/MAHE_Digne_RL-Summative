@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rwanda Entrepreneurship RL - live dashboard</title>
+<style>
+ body{font-family:system-ui,sans-serif;background:#0c1226;color:#e1eeff;margin:0;padding:16px}
+ h1{font-size:20px;margin:0 0 12px} button{background:#00be8c;border:0;border-radius:8px;padding:10px 14px;font-weight:700;margin-right:8px;cursor:pointer}
+ .row{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:14px}.lbl{width:120px}
+ .bar{flex:1;height:14px;background:#23304a;border-radius:7px;overflow:hidden}.fill{height:100%;background:#00be8c;width:0}
+ #log{font-family:monospace;font-size:12px;background:#16203a;padding:10px;border-radius:8px;height:180px;overflow:auto;margin-top:12px}
+ .card{max-width:560px;margin:auto}
+</style></head><body><div class="card">
+<h1>Rwanda Entrepreneurship Journey - agent dashboard</h1>
+<button onclick="reset()">New episode</button><button onclick="auto()" id="auto">Run agent</button>
+<div id="bars"></div><div id="status" style="margin-top:8px;font-weight:700"></div><div id="log"></div></div>
+<script>
+const API="http://localhost:8000";let timer=null;
+const KEYS=[["skill","Skill"],["capital","Capital"],["network","Network"],["readiness","Readiness"],["debt","Debt"],["health","Health"],["demand_survey","Demand (survey)"]];
+function draw(j){const o=j.state.observation;document.getElementById("bars").innerHTML=KEYS.map(([k,l])=>
+ `<div class="row"><div class="lbl">${l}</div><div class="bar"><div class="fill" style="width:${Math.round(o[k]*100)}%"></div></div></div>`).join("");
+ document.getElementById("status").textContent=`Month ${j.state.step} | ${j.state.status} | employees ${j.state.employees} | reward ${j.reward}`;}
+async function post(p){const r=await fetch(API+p,{method:"POST"});return r.json()}
+async function reset(){stop();const j=await post("/reset");document.getElementById("log").innerHTML="";draw(j)}
+async function tick(){const j=await post("/agent_step");draw(j);const l=document.getElementById("log");
+ l.innerHTML+=`month ${j.state.step}: ${j.agent_action.name} (r=${j.reward})<br>`;l.scrollTop=l.scrollHeight;if(j.terminated||j.truncated)stop()}
+function stop(){clearInterval(timer);timer=null;document.getElementById("auto").textContent="Run agent"}
+function auto(){if(timer)return stop();timer=setInterval(tick,400);document.getElementById("auto").textContent="Stop"}
+reset();
+</script></body></html>
