@@ -1,0 +1,11 @@
+{
+  "algo": "dqn",
+  "run": 6,
+  "path": "models/dqn/best_dqn.pt",
+  "best_runs": {
+    "dqn": 6,
+    "reinforce": 8,
+    "a2c": 3,
+    "ppo": 7
+  }
+}
